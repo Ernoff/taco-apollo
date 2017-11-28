@@ -1,42 +1,24 @@
 /* eslint-disable no-unused-vars */
-class Service {
-  constructor (options) {
-    this.options = options || {};
-  }
+import { apolloExpress, graphiqlExpress } from 'apollo-server';
+import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
+import Resolvers from './resolvers';
+import Schema from './schema';
 
-  find (params) {
-    return Promise.resolve([]);
-  }
+module.exports = function(){
+  const app = this;
 
-  get (id, params) {
-    return Promise.resolve({
-      id, text: `A new message with ID: ${id}!`
-    });
-  }
+  const executableSchema = makeExecutableSchema({
+    typeDefs: Schema,
+    resolvers: Resolvers.call(app)
+  });
 
-  create (data, params) {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current)));
+  app.use('/graphql', apolloExpress((req) => {
+    return {
+      schema: executableSchema
     }
+  }))
 
-    return Promise.resolve(data);
-  }
-
-  update (id, data, params) {
-    return Promise.resolve(data);
-  }
-
-  patch (id, data, params) {
-    return Promise.resolve(data);
-  }
-
-  remove (id, params) {
-    return Promise.resolve({ id });
-  }
+  app.use('/graphiql', graphiqlExpress({
+    endpointURL: '/graphql'
+  }))
 }
-
-module.exports = function (options) {
-  return new Service(options);
-};
-
-module.exports.Service = Service;

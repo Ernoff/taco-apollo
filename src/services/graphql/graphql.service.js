@@ -8,8 +8,8 @@ module.exports = function () {
   const paginate = app.get('paginate');
 
   const options = {
-    name: 'graphql',
-    paginate
+    name: 'graphql'
+    // paginate
   };
 
   // Initialize our service with any options it requires
