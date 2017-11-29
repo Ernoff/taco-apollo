@@ -1,7 +1,7 @@
 export default function Resolvers(){
   let app = this;
 
-  const Tacos = app.service('tacos');
+  const Tacos = app.service('taco');
 
   return {
     RootQuery: {
